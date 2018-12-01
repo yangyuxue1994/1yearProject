@@ -6,7 +6,10 @@
     <script src="jspsych-6.0.5/plugins/jspsych-image-button-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-image-text.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-categorize-image.js"></script>
+	
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+	
 	
     <style>
       img { width: 300px; }
@@ -29,11 +32,12 @@
 /* Welcome */
   var welcome = {
 	  type: "html-keyboard-response",
-      stimulus: "Welcome to the experiment. Press any key to begin."
+      stimulus: "Welcome to the experiment. Press any key to begin.",
+	  timing_post_trial:2000
   };
   timeline.push(welcome);
   
-/* define instructions trial */
+/* Instruction */
    var instructions = {
      type: "html-keyboard-response",
      stimulus: "<h1>INSTRUCTION</h1>"+
@@ -49,60 +53,45 @@
      post_trial_gap: 2000
    };
    timeline.push(instructions);
-  
-  /*
+   
+   /*fixation*/
   var fixation = {
     type: 'html-keyboard-response',
-    stimulus: '<div style="font-size:60px;">+</div>',
+    stimulus: '<div style="font-size:60px;">prac + pract</div>',
     choices: jsPsych.NO_KEYS,
     trial_duration: 1000,
-  }
-  
-  var prime = {
-    type: 'image-button-response',
-    stimulus: '',
-    choices: ['NO', 'YES'],
-	stimulus_duration: 1000,
-    prompt: ''
   };
-  
-  var target = {
-	  type: 'image-text',
-	  stimulus: '',
-	  questions: [
-		  {prompt:'',
-		  value: '',
-		  row: 5,
-		  column: 50}],
-  };
-  */
- function dispTrials(){
-	  var numTrials = 2;
-	  var prime_pic = ['img/p1.png','img/p2.png','img/p3.png','img/p4.png'];
-	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
-	  var prime_s = ['p1: the boy is kicking the ball.',
-	  'p2: the girl is holding the flower',
-	  'p3: the dog is chewing the slippers','p4: the little duck is following the mother duck.'];
-	  // var targ_s = ['','ts2','ts3','ts4'];
-	  
-	  
-	  
-	  var fixation = {
-	    type: 'html-keyboard-response',
-	    stimulus: '<div style="font-size:60px;">+</div>',
-	    choices: jsPsych.NO_KEYS,
-	    trial_duration: 100,
-	  }
-	
+
+/* Prac trials */
+   function dispPracTrials() {
+ 	  var numTrials = 2;
+ 	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
+ 	  var prime_pic = ['img/p1.png','img/p2.png','img/p3.png','img/p4.png'];
+ 	  var prime_s = ['p1: the boy is kicking the ball.',
+ 	  'p2: the girl is holding the flower',
+ 	  'p3: the dog is chewing the slippers',
+	  'p4: the little duck is following the mother duck.'];
+	  var prime_ans = ['y','y','y','y'];
+	  	  
 	  for (i=0; i<numTrials; i++) {
+		  /* prime with feedback */
 		  var currPrime = {
-		    type: 'image-button-response',
+		    type: 'categorize-image',
 		    stimulus: prime_pic[i],
-		    choices: ['NO', 'YES'],
-			stimulus_duration: 100,
-		    prompt: prime_s[i],
+		    key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode(prime_ans[i]),
+			  // key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'),
+		    choices: [jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'), jsPsych.pluginAPI.convertKeyCharacterToKeyCode('N')],
+		    text_answer: '',
+		    correct_text: "<p>Correct.</p>",
+		    incorrect_text: "<p>Incorrect.</p>",
+		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br>"+prime_s[i],
+		    // trial_duration: 1500,
+		    show_feedback_on_timeout: false,
+		    force_correct_button_press: false,
+			  data: {isPractice: true}
 		  };
 		  
+		  /* target */
 		  var currTarget = {
 			  type: 'image-text',
 			  stimulus: targ_pic[i],
@@ -111,17 +100,58 @@
 				  value: '',
 				  row: 5,
 				  column: 50}],
-			  data: {stimulus:targ_pic[i]}
+				  data: {isPractice: true}
 		  };
-		  
-		  timeline.push(fixation,currPrime,currTarget);
+		  timeline.push(fixation, currPrime, currTarget);
 	  };
-	  return;
-  };
-  
+   }; 
+   dispPracTrials();
+ 
+/* Real trials */
+ function dispRealTrials(){
+	  var numTrials = 2;
+	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
+	  var prime_pic = ['img/p1.png','img/p2.png','img/p3.png','img/p4.png'];
+	  var prime_s = ['p1: the boy is kicking the ball.',
+	  'p2: the girl is holding the flower',
+	  'p3: the dog is chewing the slippers',
+	  'p4: the little duck is following the mother duck.'];
+	  var prime_ans = ['y','y','y','y'];
+	
+	  for (i=0; i<numTrials; i++) {
+		  /*real prime without feedback*/
+		  console.log('in real trial...')
+		  var currPrime = {
+		    type: 'categorize-image',
+		    stimulus: prime_pic[i],
+		    key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode(prime_ans[i]),
+		    choices: [jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'), jsPsych.pluginAPI.convertKeyCharacterToKeyCode('N')],
+		    text_answer: '',
+		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br>"+prime_s[i],
+		    // trial_duration: 1500,
+		    show_feedback_on_timeout: false,
+		    force_correct_button_press: false,
+			  data:{isPractice: false}
+		  };
+		  var currTarget = {
+			  type: 'image-text',
+			  stimulus: targ_pic[i],
+			  questions: [
+				  {prompt: 'Please describe the picture in your words: ',
+				  value: '',
+				  row: 5,
+				  column: 50}],
+			  data: {stimulus:targ_pic[i],isPractice: false}
+		  };		
+		   
+		  timeline.push(fixation, currPrime, currTarget);
+  	}; // end of for loop
+	// return; // end of function
+};
+
   
   /* display all trials */
-  dispTrials();
+ dispRealTrials();
   
   /* data collection */ 
   
@@ -130,18 +160,10 @@
     timeline: timeline,
     on_finish: function(){
 		
-		
-		var pdata = jsPsych.data.get().filter({trial_type:'image-button-response'});
-		var tdata = jsPsych.data.get().filter({trial_type:'image-text'});
-		var mydata = pdata.join(tdata);
-
-		// jsPsych.data.displayData();
-		// var mydata = jsPsych.data.get().filter({trial_type: 'image-text'});
+		jsPsych.data.displayData();
+		mydata = jsPsych.data.get().filter([{trial_type:'categorize-image'},{trial_type:'image-text'}]);
 		mydata.localSave('csv','mydata.csv');
-		
-		//console.log('all my data:' + jsPsych.data.get().json());
-		// console.log('after filter my data:' + jsPsych.data.get().filter({trial_type: 'image-text'}).json());
-		
+		// console.log('all my data:' + jsPsych.data.get().csv());	
 	}
   });
 
