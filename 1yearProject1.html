@@ -17,6 +17,15 @@
 
   var timeline = [];
   
+ /* collect subject info*/
+  var subject_id = 001;
+  var condition_assignment = jsPsych.randomization.sampleWithoutReplacement(['conditionA', 'conditionB', 'conditionC', 'conditionD'], 1)[0];
+  
+  jsPsych.data.addProperties({
+    subject: subject_id,
+    condition: condition_assignment
+  });
+  
 /* Welcome */
   var welcome = {
 	  type: "html-keyboard-response",
@@ -68,7 +77,7 @@
   };
   */
  function dispTrials(){
-	  var numTrials = 4;
+	  var numTrials = 2;
 	  var prime_pic = ['img/p1.png','img/p2.png','img/p3.png','img/p4.png'];
 	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
 	  var prime_s = ['p1: the boy is kicking the ball.',
@@ -76,11 +85,13 @@
 	  'p3: the dog is chewing the slippers','p4: the little duck is following the mother duck.'];
 	  // var targ_s = ['','ts2','ts3','ts4'];
 	  
+	  
+	  
 	  var fixation = {
 	    type: 'html-keyboard-response',
 	    stimulus: '<div style="font-size:60px;">+</div>',
 	    choices: jsPsych.NO_KEYS,
-	    trial_duration: 1000,
+	    trial_duration: 100,
 	  }
 	
 	  for (i=0; i<numTrials; i++) {
@@ -88,8 +99,8 @@
 		    type: 'image-button-response',
 		    stimulus: prime_pic[i],
 		    choices: ['NO', 'YES'],
-			stimulus_duration: 1000,
-		    prompt: prime_s[i]
+			stimulus_duration: 100,
+		    prompt: prime_s[i],
 		  };
 		  
 		  var currTarget = {
@@ -100,6 +111,7 @@
 				  value: '',
 				  row: 5,
 				  column: 50}],
+			  data: {stimulus:targ_pic[i]}
 		  };
 		  
 		  timeline.push(fixation,currPrime,currTarget);
@@ -108,13 +120,28 @@
   };
   
   
-  
+  /* display all trials */
   dispTrials();
   
+  /* data collection */ 
+  
+  /* init exp */
   jsPsych.init({
     timeline: timeline,
     on_finish: function(){
-		jsPsych.data.displayData();
+		
+		
+		var pdata = jsPsych.data.get().filter({trial_type:'image-button-response'});
+		var tdata = jsPsych.data.get().filter({trial_type:'image-text'});
+		var mydata = pdata.join(tdata);
+
+		// jsPsych.data.displayData();
+		// var mydata = jsPsych.data.get().filter({trial_type: 'image-text'});
+		mydata.localSave('csv','mydata.csv');
+		
+		//console.log('all my data:' + jsPsych.data.get().json());
+		// console.log('after filter my data:' + jsPsych.data.get().filter({trial_type: 'image-text'}).json());
+		
 	}
   });
 
