@@ -7,7 +7,6 @@
     <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-image-text.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-categorize-image.js"></script>
-	
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 	
 	
@@ -57,7 +56,7 @@
    /*fixation*/
   var fixation = {
     type: 'html-keyboard-response',
-    stimulus: '<div style="font-size:60px;">prac + pract</div>',
+    stimulus: '<div style="font-size:60px;">+</div>',
     choices: jsPsych.NO_KEYS,
     trial_duration: 1000,
   };
@@ -78,15 +77,13 @@
 		  var currPrime = {
 		    type: 'categorize-image',
 		    stimulus: prime_pic[i],
+			stimulus_duration: 500,
 		    key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode(prime_ans[i]),
-			  // key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'),
 		    choices: [jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'), jsPsych.pluginAPI.convertKeyCharacterToKeyCode('N')],
-		    text_answer: '',
-		    correct_text: "<p>Correct.</p>",
-		    incorrect_text: "<p>Incorrect.</p>",
-		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br>"+prime_s[i],
-		    // trial_duration: 1500,
-		    show_feedback_on_timeout: false,
+		    correct_text: "<h1>Correct.</h1>",
+		    incorrect_text: "<h1>Incorrect.</h1>",
+		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br><h1>"+prime_s[i]+"</h1>",
+			show_stim_with_feedback: false, // not show sti with feedback
 		    force_correct_button_press: false,
 			  data: {isPractice: true}
 		  };
@@ -124,13 +121,14 @@
 		  var currPrime = {
 		    type: 'categorize-image',
 		    stimulus: prime_pic[i],
+			stimulus_duration: 500,
 		    key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode(prime_ans[i]),
 		    choices: [jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'), jsPsych.pluginAPI.convertKeyCharacterToKeyCode('N')],
-		    text_answer: '',
-		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br>"+prime_s[i],
-		    // trial_duration: 1500,
+		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br><h1>"+prime_s[i]+"</h1>",
+			show_stim_with_feedback: false, // not show sti with feedback
 		    show_feedback_on_timeout: false,
 		    force_correct_button_press: false,
+			  feedback_duration:0,
 			  data:{isPractice: false}
 		  };
 		  var currTarget = {
