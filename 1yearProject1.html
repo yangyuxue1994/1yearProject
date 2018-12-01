@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="jspsych-6.0.5/jspsych.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-button-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-text.js"></script>
+    <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+	
+    <style>
+      img { width: 300px; }
+    </style>
+  </head>
+  <body></body>
+  <script>
+
+  var timeline = [];
+  
+/* Welcome */
+  var welcome = {
+	  type: "html-keyboard-response",
+      stimulus: "Welcome to the experiment. Press any key to begin."
+  };
+  timeline.push(welcome);
+  
+/* define instructions trial */
+   var instructions = {
+     type: "html-keyboard-response",
+     stimulus: "<h1>INSTRUCTION</h1>"+
+	   	 "<p>In this experiment, a picture and a sentence will appear in the center " +
+         "of the screen.</p><p>You need to iedntify if the sentence correctly describe the " +
+         "picture.</p>" +
+         "<p>If the sentence doesn't describes the sentence, click <strong>NO</strong> " + 
+	   	 "button as fast as you can.</p>" +
+         "<p>If the sentence describes the sentence, click <strong> YES </strong> button as " +
+         "fast as you can.</p>" +
+         "<div style='width: 700px;'>"+ "</br>" +
+         "<p>Now, if you're ready for the experiment, press any key to begin.</p>",
+     post_trial_gap: 2000
+   };
+   timeline.push(instructions);
+  
+  /*
+  var fixation = {
+    type: 'html-keyboard-response',
+    stimulus: '<div style="font-size:60px;">+</div>',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 1000,
+  }
+  
+  var prime = {
+    type: 'image-button-response',
+    stimulus: '',
+    choices: ['NO', 'YES'],
+	stimulus_duration: 1000,
+    prompt: ''
+  };
+  
+  var target = {
+	  type: 'image-text',
+	  stimulus: '',
+	  questions: [
+		  {prompt:'',
+		  value: '',
+		  row: 5,
+		  column: 50}],
+  };
+  */
+ function dispTrials(){
+	  var numTrials = 4;
+	  var prime_pic = ['img/p1.png','img/p2.png','img/p3.png','img/p4.png'];
+	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
+	  var prime_s = ['p1: the boy is kicking the ball.',
+	  'p2: the girl is holding the flower',
+	  'p3: the dog is chewing the slippers','p4: the little duck is following the mother duck.'];
+	  // var targ_s = ['','ts2','ts3','ts4'];
+	  
+	  var fixation = {
+	    type: 'html-keyboard-response',
+	    stimulus: '<div style="font-size:60px;">+</div>',
+	    choices: jsPsych.NO_KEYS,
+	    trial_duration: 1000,
+	  }
+	
+	  for (i=0; i<numTrials; i++) {
+		  var currPrime = {
+		    type: 'image-button-response',
+		    stimulus: prime_pic[i],
+		    choices: ['NO', 'YES'],
+			stimulus_duration: 1000,
+		    prompt: prime_s[i]
+		  };
+		  
+		  var currTarget = {
+			  type: 'image-text',
+			  stimulus: targ_pic[i],
+			  questions: [
+				  {prompt: 'Please describe the picture in your words: ',
+				  value: '',
+				  row: 5,
+				  column: 50}],
+		  };
+		  
+		  timeline.push(fixation,currPrime,currTarget);
+	  };
+	  return;
+  };
+  
+  
+  
+  dispTrials();
+  
+  jsPsych.init({
+    timeline: timeline,
+    on_finish: function(){
+		jsPsych.data.displayData();
+	}
+  });
+
+  </script>
+</html>
