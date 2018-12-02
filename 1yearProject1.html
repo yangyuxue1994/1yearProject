@@ -105,7 +105,7 @@
    dispPracTrials();
  
 /* Real trials */
- function dispRealTrials(){
+ 	function dispRealTrials(){
 	  var numTrials = 2;
 	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
 	  var prime_pic = ['img/p1.png','img/p2.png','img/p3.png','img/p4.png'];
@@ -143,27 +143,46 @@
 		  };		
 		   
 		  timeline.push(fixation, currPrime, currTarget);
-  	}; // end of for loop
-	// return; // end of function
-};
-
+  		}; // end of for loop
+		// return; // end of function
+	};
+	
+/* Display all trials */
+	dispRealTrials();
   
-  /* display all trials */
- dispRealTrials();
-  
-  /* data collection */ 
-  
-  /* init exp */
-  jsPsych.init({
+/* init exp */
+	jsPsych.init({
     timeline: timeline,
     on_finish: function(){
 		
 		jsPsych.data.displayData();
 		mydata = jsPsych.data.get().filter([{trial_type:'categorize-image'},{trial_type:'image-text'}]);
-		mydata.localSave('csv','mydata.csv');
+		// mydata.localSave('csv','mydata.csv');
 		// console.log('all my data:' + jsPsych.data.get().csv());	
 	}
   });
+  
+  /* mturk parts*/
+  var turkInfo = jsPsych.turkInfo();
+  if(turkInfo.previewMode && !turkInfo.outsideTurk) {
+    $('#turkInfo').html('<a href="link_to_experiment.html" target="_blank">Click Here to Start Experiment</a>');
+  }
+  // workerID
+  turkInfo.workerId
+
+  // hitID
+  turkInfo.hitId
+
+  // assignmentID
+  turkInfo.assignmentId
+  
+  function sendData() {
+    jsPsych.turk.submitToTurk({
+      code: document.getElementById('code').value
+    });
+  }
+  
+  
 
   </script>
 </html>
