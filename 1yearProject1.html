@@ -11,22 +11,23 @@
 	
 	
     <style>
-      img { width: 450px; }
+      img { width: 300px; }
     </style>
   </head>
   <body></body>
   <script>
 
   var timeline = [];
+
   
  /* collect subject info*/
-  // var subject_id = 001;
-  // var condition_assignment = jsPsych.randomization.sampleWithoutReplacement(['conditionA', 'conditionB', 'conditionC', 'conditionD'], 1)[0];
-  //
-  // jsPsych.data.addProperties({
-  //   subject: subject_id,
-  //   condition: condition_assignment
-  // });
+  var subject_id = 001;
+  var condition_assignment = jsPsych.randomization.sampleWithoutReplacement(['conditionA', 'conditionB', 'conditionC', 'conditionD'], 1)[0];
+  
+  jsPsych.data.addProperties({
+    subject: subject_id,
+    condition: condition_assignment
+  });
   
 /* Welcome */
   var welcome = {
@@ -63,21 +64,21 @@
 
 /* Prac trials */
    function dispPracTrials() {
- 	  var numTrials = 2;
+ 	  var numTrials = 4;
  	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
- 	  var prime_pic = ['img/P01.jpg','img/P02.jpg','img/P03.jpg','img/P04.jpg'];
- 	  var prime_s = ['p1: the boy is kicking the ball.',
- 	  'p2: the girl is holding the flower',
- 	  'p3: the dog is chewing the slippers',
-	  'p4: the little duck is following the mother duck.'];
-	  var prime_ans = ['y','y','y','y'];
+	  var prime_pic = ['img/P01.jpg','img/P02.jpg','img/P03.jpg','img/P04.jpg'];
+ 	  var prime_s = ['The nun is chasing the sailor.',
+ 	  'The girl is holding the flower',
+ 	  'The theft is chased by the waitress.',
+	  'The boy is kicking the ball.'];
+	  var prime_ans = ['y','n','y','n'];
 	  	  
 	  for (i=0; i<numTrials; i++) {
 		  /* prime with feedback */
 		  var currPrime = {
 		    type: 'categorize-image',
 		    stimulus: prime_pic[i],
-			stimulus_duration: 2000,
+			stimulus_duration: 5000,
 		    key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode(prime_ans[i]),
 		    choices: [jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'), jsPsych.pluginAPI.convertKeyCharacterToKeyCode('N')],
 		    correct_text: "<h1>Correct.</h1>",
@@ -97,7 +98,7 @@
 				  value: '',
 				  row: 5,
 				  column: 50}],
-				  data: {isPractice: true}
+				  data: {stimulus:targ_pic[i],isPractice: false}
 		  };
 		  timeline.push(fixation, currPrime, currTarget);
 	  };
@@ -109,11 +110,11 @@
 	  var numTrials = 2;
 	  var targ_pic = ['img/t1.png','img/t2.png','img/t3.png','img/t4.png'];
 	  var prime_pic = ['img/P01.jpg','img/P02.jpg','img/P03.jpg','img/P04.jpg'];
-	  var prime_s = ['p1: the boy is kicking the ball.',
-	  'p2: the girl is holding the flower',
-	  'p3: the dog is chewing the slippers',
-	  'p4: the little duck is following the mother duck.'];
-	  var prime_ans = ['y','y','y','y'];
+ 	  var prime_s = ['The nun is chasing the sailor.',
+ 	  'The girl is holding the flower',
+ 	  'The theft is chased by the waitress.',
+	  'The boy is kicking the ball.'];
+	  var prime_ans = ['y','n','y','n'];
 	
 	  for (i=0; i<numTrials; i++) {
 		  /*real prime without feedback*/
@@ -121,7 +122,7 @@
 		  var currPrime = {
 		    type: 'categorize-image',
 		    stimulus: prime_pic[i],
-			stimulus_duration: 2000,
+			stimulus_duration: 5000,
 		    key_answer: jsPsych.pluginAPI.convertKeyCharacterToKeyCode(prime_ans[i]),
 		    choices: [jsPsych.pluginAPI.convertKeyCharacterToKeyCode('Y'), jsPsych.pluginAPI.convertKeyCharacterToKeyCode('N')],
 		    prompt: "<p>Does the sentence correctly describe the picture? </br> Press Y or N. </p></br></br><h1>"+prime_s[i]+"</h1>",
@@ -149,15 +150,14 @@
 	
 /* Display all trials */
 	dispRealTrials();
-  
+	
 /* init exp */
 	jsPsych.init({
-    timeline: timeline,
-    on_finish: function(){
-		
+		timeline: timeline,
+		on_finish: function(){
 		jsPsych.data.displayData();
 		mydata = jsPsych.data.get().filter([{trial_type:'categorize-image'},{trial_type:'image-text'}]);
-		// mydata.localSave('csv','mydata.csv');
+		mydata.localSave('csv','mydata.csv');
 		// console.log('all my data:' + jsPsych.data.get().csv());	
 	}
   });
@@ -181,7 +181,7 @@
   //     code: document.getElementById('code').value
   //   });
   // }
-  //
+  
   
 
   </script>
